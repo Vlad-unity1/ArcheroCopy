@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "339432055285",
+    "project_id": "archero-v4444",
+    "storage_bucket": "archero-v4444.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339432055285:android:2b7a339b9184253df7c0bc",
+        "android_client_info": {
+          "package_name": "com.Archero.ArcheroCopy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmoeMvil52Jr1OqvaAT8zezgDFL-5Rtq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
