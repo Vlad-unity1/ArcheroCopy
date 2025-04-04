@@ -1,6 +1,9 @@
 using System.Threading.Tasks;
 
-public interface IAssetProvider
+namespace Project.Scripts.Addressables
 {
-    Task<T> LoadAssetAsync<T>(string key) where T : UnityEngine.Object;
+    public interface IAssetProvider
+    {
+        Task<T> LoadAssetAsync<T>(string key) where T : UnityEngine.Object;
+    }
 }

@@ -1,13 +1,15 @@
 using System.Threading.Tasks;
-using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-public class AddressableAssetProvider : IAssetProvider
+namespace Project.Scripts.Addressables
 {
-    public async Task<T> LoadAssetAsync<T>(string key) where T : UnityEngine.Object
+    public class AddressableAssetProvider : IAssetProvider
     {
-        AsyncOperationHandle<T> handle = Addressables.LoadAssetAsync<T>(key);
-        await handle.Task;
-        return handle.Result;
+        public async Task<T> LoadAssetAsync<T>(string key) where T : UnityEngine.Object
+        {
+            AsyncOperationHandle<T> handle = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<T>(key);
+            await handle.Task;
+            return handle.Result;
+        }
     }
 }

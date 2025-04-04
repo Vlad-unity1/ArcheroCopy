@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 using TMPro;
+using System.Threading.Tasks;
 
 namespace Project.Scripts
 {
@@ -46,7 +47,12 @@ namespace Project.Scripts
         public void Initialize()
         {
             _nextLevelController.DisablePanels();
-            _player = _playerFactory.CreatePlayer(_spawnPointPlayer, 100, _joystick);
+            _ = InitializeAsync();
+        }
+
+        private async Task InitializeAsync()
+        {
+            _player = await _playerFactory.CreatePlayerAsync(_spawnPointPlayer, 100, _joystick);
             _enemyFactory.CreateEnemies(_enemySpawnData);
             _enemies = _enemyFactory.Enemies;
 
@@ -63,6 +69,7 @@ namespace Project.Scripts
             _levelText.text = "Level: " + _levelCount;
             UpdateExperienceSlider();
         }
+
 
         private void RemoveEnemy(EnemyModel enemy)
         {

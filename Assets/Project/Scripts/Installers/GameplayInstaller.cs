@@ -1,4 +1,5 @@
 using NextLevelLoader;
+using Project.Scripts.Addressables;
 using Project.Scripts.BulletFactoryEnemy;
 using Project.Scripts.BulletModel;
 using Project.Scripts.Enemies;
@@ -36,7 +37,8 @@ namespace Project.Scripts.Installers
             Container.BindInstance(_slider).AsSingle();
             Container.BindInstance(_levelText).AsSingle();
 
-            Container.Bind<PlayerFactory>().AsSingle().WithArguments(_weaponFactory, _sceneData);
+            Container.Bind<IAssetProvider>().To<AddressableAssetProvider>().AsSingle();
+            Container.Bind<PlayerFactory>().AsSingle();
             Container.Bind<EnemyFactory>().AsSingle().WithArguments(_weaponFactory, _sceneData);
             Container.Bind<BowConfig>().FromInstance(_bowConfig).AsSingle();
             Container.Bind<StoneCannonConfig>().FromInstance(_stoneCannonConfig).AsSingle();

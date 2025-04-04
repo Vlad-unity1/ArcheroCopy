@@ -21,7 +21,7 @@ namespace Project.Scripts.PlayerModels
         public Health PlayerHealth { get; private set; }
         public Weapon<BowConfig> CurrentWeapon;
 
-        public PlayerMovement PlayerMovement { get; private set; }
+        public PlayerMovement PlayerMovement { get; }
         private readonly Joystick _joystick;
 
         public PlayerModel(Health playerHealth, int speed, Weapon<BowConfig> currentWeapon, PlayerMovement playerMovement, Joystick joystick, float experience)

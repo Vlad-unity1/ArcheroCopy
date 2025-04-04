@@ -1,14 +1,13 @@
-﻿using UnityEngine;
+﻿using Firebase;
+using Firebase.Extensions;
 using UnityEngine.SceneManagement;
 using Zenject;
-using Firebase;
-using Firebase.Extensions;
 
 namespace Project.Scripts.Firebase
 {
     public class FirebaseInstaller : MonoInstaller
     {
-        private string _gameSceneName = "StartSceneTest";
+        private readonly string _gameSceneName = "StartSceneTest";
 
         public override void InstallBindings()
         {
@@ -22,12 +21,7 @@ namespace Project.Scripts.Firebase
             {
                 if (task.Result == DependencyStatus.Available)
                 {
-                    Debug.Log("Firebase инициализирован.");
                     SceneManager.LoadScene(_gameSceneName);
-                }
-                else
-                {
-                    Debug.LogError($"Ошибка инициализации Firebase: {task.Result}");
                 }
             });
         }
