@@ -21,19 +21,19 @@ namespace Project.Scripts.Enemies
             _healthBar.value = _health.CurrentHealth / _health.MaxHealth;
         }
 
+        private void OnDestroy()
+        {
+            _health.OnHealthChanged -= UpdateHealthBar;
+        }
+
         public void TakeDamage(float damage)
         {
-            _enemyModel?.EnemyHealth.TakeDamage(damage);
+            _enemyModel.EnemyHealth.TakeDamage(damage);
         }
 
         private void UpdateHealthBar(float currentHealthRatio)
         {
             _healthBar.value = currentHealthRatio;
-        }
-
-        private void OnDestroy()
-        {
-            _health.OnHealthChanged -= UpdateHealthBar;
         }
     }
 }

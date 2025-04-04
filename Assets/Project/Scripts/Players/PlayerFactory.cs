@@ -18,7 +18,7 @@ namespace Project.Scripts.Players
             _sceneData = sceneData;
         }
 
-        public PlayerModel CreatePlayer(SpawnPointPlayerScene spawnPosition, int initialHealth, Joystick joystick)
+        public PlayerModel CreatePlayer(PlayerSpawnPoint spawnPosition, int initialHealth, Joystick joystick)
         {
             PlayerMovement playerMovement = Object.Instantiate(_sceneData.PrefabPlayer, spawnPosition.transform.position, Quaternion.identity);
             var playerInput = new PlayerInputHandler(joystick);

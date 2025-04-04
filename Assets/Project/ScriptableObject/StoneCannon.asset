@@ -16,3 +16,4 @@ MonoBehaviour:
   BulletSpeed: 8
   FireRate: 3
   Damage: 50
+  SizePool: 10

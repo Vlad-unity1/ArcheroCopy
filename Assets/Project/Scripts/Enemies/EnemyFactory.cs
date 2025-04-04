@@ -12,6 +12,7 @@ namespace Project.Scripts.Enemies
         private readonly WeaponFactory _weaponFactory;
         private readonly SceneData _sceneData;
         private readonly List<EnemyModel> _enemies = new();
+        public List<EnemyModel> Enemies => _enemies;
 
         public EnemyFactory(WeaponFactory weaponFactory, SceneData sceneData)
         {
@@ -19,7 +20,7 @@ namespace Project.Scripts.Enemies
             _sceneData = sceneData;
         }
 
-        public EnemyModel[] CreateEnemies(EnemySpawnData[] enemySpawnData)
+        public void CreateEnemies(EnemySpawnData[] enemySpawnData)
         {
             EnemyModel[] enemies = new EnemyModel[enemySpawnData.Length];
             _enemies.Clear();
@@ -52,13 +53,6 @@ namespace Project.Scripts.Enemies
 
                 enemyObject.Initialize(enemy, enemyObject.WeaponTransform, enemyHealth);
             }
-
-            return enemies;
-        }
-
-        public List<EnemyModel> GetAllEnemies()
-        {
-            return _enemies;
         }
     }
 }

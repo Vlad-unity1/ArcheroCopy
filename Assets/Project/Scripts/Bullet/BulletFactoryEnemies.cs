@@ -8,9 +8,9 @@ namespace Project.Scripts.BulletFactoryEnemy
     {
         private readonly BulletPool _bulletPool;
 
-        public BulletFactoryEnemies(WeaponConfig weaponConfig, int initialPoolSize)
+        public BulletFactoryEnemies(WeaponConfig weaponConfig)
         {
-            _bulletPool = new BulletPool(weaponConfig.BulletPrefab, initialPoolSize);
+            _bulletPool = new BulletPool(weaponConfig.BulletPrefab, weaponConfig.SizePool);
         }
 
         public Bullet GetBullet(Vector3 position, Quaternion rotation)

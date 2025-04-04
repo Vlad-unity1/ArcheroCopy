@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Project.Scripts.Weapons;
 using UnityEngine;
 
 namespace Project.Scripts.BulletModel

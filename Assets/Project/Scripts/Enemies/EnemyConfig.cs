@@ -8,9 +8,9 @@ namespace Project.Scripts.Enemies
     public class EnemyConfig : ScriptableObject
     {
         public int MaxHealth;
+        public float EXP;
         public EnemyView PrefabEnemy;
         public Weapon<StoneCannonConfig> StartingWeaponConfig;
-        public float EXP;
 
         private void OnValidate()
         {   

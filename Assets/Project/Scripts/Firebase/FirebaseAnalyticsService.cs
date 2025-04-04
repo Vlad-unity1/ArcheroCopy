@@ -1,22 +1,25 @@
-using Firebase.Analytics;
 using System.Collections.Generic;
+using Firebase.Analytics;
 
-public class FirebaseAnalyticsService : IAnalyticsService
+namespace Project.Scripts.Firebase
 {
-    public void LogEvent(string eventName, params (string key, object value)[] parameters)
+    public class FirebaseAnalyticsService : IAnalyticsService
     {
-        List<Parameter> firebaseParameters = new();
-
-        foreach (var (key, value) in parameters)
+        public void LogEvent(string eventName, params (string key, object value)[] parameters)
         {
-            if (value is string strValue)
-                firebaseParameters.Add(new Parameter(key, strValue));
-            else if (value is int intValue)
-                firebaseParameters.Add(new Parameter(key, intValue));
-            else if (value is float floatValue)
-                firebaseParameters.Add(new Parameter(key, floatValue));
-        }
+            List<Parameter> firebaseParameters = new();
 
-        FirebaseAnalytics.LogEvent(eventName, firebaseParameters.ToArray());
+            foreach (var (key, value) in parameters)
+            {
+                if (value is string strValue)
+                    firebaseParameters.Add(new Parameter(key, strValue));
+                else if (value is int intValue)
+                    firebaseParameters.Add(new Parameter(key, intValue));
+                else if (value is float floatValue)
+                    firebaseParameters.Add(new Parameter(key, floatValue));
+            }
+
+            FirebaseAnalytics.LogEvent(eventName, firebaseParameters.ToArray());
+        }
     }
 }

@@ -1,4 +1,7 @@
-public interface IAnalyticsService
+namespace Project.Scripts.Firebase
 {
-    void LogEvent(string eventName, params (string key, object value)[] parameters);
+    public interface IAnalyticsService
+    {
+        void LogEvent(string eventName, params (string key, object value)[] parameters);
+    }
 }
