@@ -1,4 +1,5 @@
-﻿using Project.Scripts.Addressables;
+﻿using Project.Scripts;
+using Project.Scripts.Addressables;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,18 +9,18 @@ namespace NextLevelLoader
     public class NextLevel
     {
         private Button _reloadButton;
+        private Button _ButtonAds;
         private GameObject _panel;
-        private GameObject _panelAds;
         private readonly Collider _door;
         private readonly IAssetProvider _assetProvider;
         private readonly Canvas _canvas;
         private readonly SceneLoader _sceneLoader;
         private readonly RewardedAds _rewardedAds;
-
+        private readonly InterstitialAdExample _interstitialAdExample;
         public RewardedAds RewardedAds => _rewardedAds;
-        public GameObject PanelAds => _panelAds;
+        public Button PanelAds => _ButtonAds;
 
-        public NextLevel(Collider door, GameObject _panelObject, IAssetProvider assetProvider, Canvas canvas, SceneLoader sceneLoader, RewardedAds rewardedAds)
+        public NextLevel(Collider door, GameObject _panelObject, IAssetProvider assetProvider, Canvas canvas, SceneLoader sceneLoader, RewardedAds rewardedAds, InterstitialAdExample interstitialAdExample)
         {
             _door = door;
             _assetProvider = assetProvider;
@@ -27,6 +28,7 @@ namespace NextLevelLoader
             _canvas = canvas;
             _sceneLoader = sceneLoader;
             _rewardedAds = rewardedAds;
+            _interstitialAdExample = interstitialAdExample;
         }
 
         public void EnableCollider()
@@ -40,7 +42,7 @@ namespace NextLevelLoader
             _panel.SetActive(false);
         }
 
-        public async Task EnablePanelAsync()
+        public async Task EnablePanelAsync(bool showAdButton)
         {
             _panel = await _assetProvider.LoadPanelPrefabAsync();
 
@@ -50,26 +52,27 @@ namespace NextLevelLoader
 
             _reloadButton = _panel.GetComponentInChildren<Button>();
             _reloadButton.onClick.AddListener(OnReloadButtonClicked);
+
+            if (showAdButton)
+            {
+                _ButtonAds = await _assetProvider.LoadRewardAdsbAsync();
+                _ButtonAds = GameObject.Instantiate(_ButtonAds, _panel.transform);
+                _rewardedAds.LoadAd();
+                _rewardedAds.SetAdButton(_ButtonAds);
+            }
+
             Time.timeScale = 0;
         }
 
         private void OnReloadButtonClicked()
         {
+            ShowAds();
             _sceneLoader.ReloadScene();
         }
 
-        public async Task EnablePanelAdsAsync()
+        private void ShowAds()
         {
-            _panelAds = await _assetProvider.LoadPanelRewardAdsbAsync();
-
-            _panelAds = GameObject.Instantiate(_panelAds);
-            _panelAds.transform.SetParent(_canvas.transform, false);
-            _panelAds.SetActive(true);
-            _rewardedAds.LoadAd();
-
-            _reloadButton = _panelAds.GetComponentInChildren<Button>();
-            _rewardedAds.SetAdButton(_reloadButton);
-            Time.timeScale = 0;
+            _interstitialAdExample.ShowAd();
         }
     }
 }

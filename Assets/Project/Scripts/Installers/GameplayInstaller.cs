@@ -75,7 +75,7 @@ namespace Project.Scripts.Installers
             Container.BindInstance(_ads);
             Container.BindInstance(_adsEx);
             Container.BindInstance(_rewardedAds);
-            Container.Bind<NextLevel>().AsSingle().WithArguments(_levelCollider, _panelGameOver, _panelCanvas, _sceneLoader, _rewardedAds);
+            Container.Bind<NextLevel>().AsSingle().WithArguments(_levelCollider, _panelGameOver, _panelCanvas, _sceneLoader, _rewardedAds, _adsEx);
         }
 
         private void BindServices()

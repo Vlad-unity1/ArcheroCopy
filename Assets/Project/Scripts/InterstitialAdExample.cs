@@ -1,69 +1,72 @@
 ﻿using UnityEngine;
 using UnityEngine.Advertisements;
 
-public class InterstitialAdExample : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
+namespace Project.Scripts
 {
-    [SerializeField] string _androidAdUnitId = "Interstitial_Android"; // ID рекламного блока для Android
-    [SerializeField] string _iOsAdUnitId = "Interstitial_iOS";         // ID рекламного блока для iOS
-    string _adUnitId;
-
-    void Awake()
+    public class InterstitialAdExample : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
     {
-        // Получаем ID рекламного блока в зависимости от платформы:
-        _adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
-            ? _iOsAdUnitId
-            : _androidAdUnitId;
-    }
+        [SerializeField] string _androidAdUnitId = "Interstitial_Android"; // ID рекламного блока для Android
+        [SerializeField] string _iOsAdUnitId = "Interstitial_iOS";         // ID рекламного блока для iOS
+        string _adUnitId;
 
-    // Загружаем контент рекламы для заданного рекламного блока:
-    public void LoadAd()
-    {
-        // ВАЖНО! Загружать рекламу можно только ПОСЛЕ инициализации (в этом примере инициализация в другом скрипте).
-        Debug.Log("Загрузка рекламы: " + _adUnitId);
-        Advertisement.Load(_adUnitId, this);
-    }
+        void Awake()
+        {
+            // Получаем ID рекламного блока в зависимости от платформы:
+            _adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)
+                ? _iOsAdUnitId
+                : _androidAdUnitId;
+        }
 
-    // Показываем ранее загруженную рекламу:
-    public void ShowAd()
-    {
-        // Если реклама не была загружена, этот метод не сработает
-        Debug.Log("Показ рекламы: " + _adUnitId);
-        Advertisement.Show(_adUnitId, this);
-    }
+        // Загружаем контент рекламы для заданного рекламного блока:
+        public void LoadAd()
+        {
+            // ВАЖНО! Загружать рекламу можно только ПОСЛЕ инициализации (в этом примере инициализация в другом скрипте).
+            Debug.Log("Загрузка рекламы: " + _adUnitId);
+            Advertisement.Load(_adUnitId, this);
+        }
 
-    // Реализация методов-интерфейсов для отслеживания загрузки/показа рекламы:
+        // Показываем ранее загруженную рекламу:
+        public void ShowAd()
+        {
+            // Если реклама не была загружена, этот метод не сработает
+            Debug.Log("Показ рекламы: " + _adUnitId);
+            Advertisement.Show(_adUnitId, this);
+        }
 
-    public void OnUnityAdsAdLoaded(string adUnitId)
-    {
-        // Этот метод вызывается, если реклама успешно загрузилась.
-    }
+        // Реализация методов-интерфейсов для отслеживания загрузки/показа рекламы:
 
-    public void OnUnityAdsFailedToLoad(string _adUnitId, UnityAdsLoadError error, string message)
-    {
-        Debug.Log($"Ошибка загрузки рекламы: {_adUnitId} - {error.ToString()} - {message}");
-        // Здесь можно реализовать повторную попытку загрузки рекламы.
-    }
+        public void OnUnityAdsAdLoaded(string adUnitId)
+        {
+            // Этот метод вызывается, если реклама успешно загрузилась.
+        }
 
-    public void OnUnityAdsShowFailure(string _adUnitId, UnityAdsShowError error, string message)
-    {
-        Debug.Log($"Ошибка показа рекламы {_adUnitId}: {error.ToString()} - {message}");
-        // Здесь можно, например, попробовать загрузить другую рекламу.
-    }
+        public void OnUnityAdsFailedToLoad(string _adUnitId, UnityAdsLoadError error, string message)
+        {
+            Debug.Log($"Ошибка загрузки рекламы: {_adUnitId} - {error.ToString()} - {message}");
+            // Здесь можно реализовать повторную попытку загрузки рекламы.
+        }
 
-    public void OnUnityAdsShowStart(string _adUnitId)
-    {
-        // Этот метод вызывается, когда реклама начала показываться.
-    }
+        public void OnUnityAdsShowFailure(string _adUnitId, UnityAdsShowError error, string message)
+        {
+            Debug.Log($"Ошибка показа рекламы {_adUnitId}: {error.ToString()} - {message}");
+            // Здесь можно, например, попробовать загрузить другую рекламу.
+        }
 
-    public void OnUnityAdsShowClick(string _adUnitId)
-    {
-        // Этот метод вызывается, когда пользователь кликнул по рекламе.
-    }
+        public void OnUnityAdsShowStart(string _adUnitId)
+        {
+            // Этот метод вызывается, когда реклама начала показываться.
+        }
 
-    public void OnUnityAdsShowComplete(string _adUnitId, UnityAdsShowCompletionState showCompletionState)
-    {
-        LoadAd();
-        // Этот метод вызывается, когда показ рекламы завершён.
-        // Можно проверить состояние: была ли досмотрена до конца и выдать награду.
+        public void OnUnityAdsShowClick(string _adUnitId)
+        {
+            // Этот метод вызывается, когда пользователь кликнул по рекламе.
+        }
+
+        public void OnUnityAdsShowComplete(string _adUnitId, UnityAdsShowCompletionState showCompletionState)
+        {
+            LoadAd();
+            // Этот метод вызывается, когда показ рекламы завершён.
+            // Можно проверить состояние: была ли досмотрена до конца и выдать награду.
+        }
     }
 }

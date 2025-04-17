@@ -101,9 +101,8 @@ namespace Project.Scripts
             }
         }
 
-        private async void ShowRewardedAds()
+        private void ShowRewardedAds()
         {
-            await _nextLevelController.EnablePanelAdsAsync();
             _nextLevelController.RewardedAds.OnAdWatched += RevivePlayer;
         }
 
@@ -111,17 +110,13 @@ namespace Project.Scripts
         {
             _nextLevelController.RewardedAds.OnAdWatched -= RevivePlayer;
 
-            GameObject.Destroy(_nextLevelController.PanelAds);
-
+            GameObject.Destroy(_nextLevelController.PanelAds.gameObject);
+            _nextLevelController.DisablePanels();
             _player = await _playerFactory.CreatePlayerAsync(_spawnPointPlayer, 100, _joystick);
+            PlayerPrefsLoad();
             _player.PlayerHealth.OnEntityDeath += RemovePlayer;
 
             Time.timeScale = 1;
-        }
-
-        private async void OnAllPlayersDefeated()
-        {
-            await _nextLevelController.EnablePanelAsync();
         }
 
         private void OnAllEnemiesDefeated()
@@ -133,16 +128,18 @@ namespace Project.Scripts
         private void RemovePlayer()
         {
             _player.PlayerHealth.OnEntityDeath -= RemovePlayer;
+
             if (!_rewardAdsComplete)
             {
+                _ = _nextLevelController.EnablePanelAsync(true);
                 ShowRewardedAds();
                 _rewardAdsComplete = true;
             }
             else
             {
+                _ = _nextLevelController.EnablePanelAsync(false);
                 _playerPrefsSaver.Clear();
                 LogDeathAndBulletsFired();
-                OnAllPlayersDefeated();
             }
         }
 

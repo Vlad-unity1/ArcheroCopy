@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Project.Scripts.Addressables
 {
@@ -7,6 +8,6 @@ namespace Project.Scripts.Addressables
     {
         Task<GameObject> LoadPlayerPrefabAsync();
         Task<GameObject> LoadPanelPrefabAsync();
-        Task<GameObject> LoadPanelRewardAdsbAsync();
+        Task<Button> LoadRewardAdsbAsync();
     }
 }

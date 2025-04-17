@@ -32,6 +32,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a63d75697a22b68459fa26ba88d4fcf9
+    m_Address: Assets/Project/Prefabs/ButtonADS.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 552d017957da77648bb795cf6b9ad648, type: 2}
   m_SchemaSet:
