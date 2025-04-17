@@ -2,6 +2,8 @@ namespace Project.Scripts.Firebase
 {
     public interface IAnalyticsService
     {
-        void LogEvent(string eventName, params (string key, object value)[] parameters);
+        void LogEnemyDeath(int killsCount);
+        void LogEntityDeath(int bulletsFired);
+        void LogLevelPassed(int levelCount);
     }
 }

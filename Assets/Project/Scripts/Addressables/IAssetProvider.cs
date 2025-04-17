@@ -1,9 +1,12 @@
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Project.Scripts.Addressables
 {
     public interface IAssetProvider
     {
-        Task<T> LoadAssetAsync<T>(string key) where T : UnityEngine.Object;
+        Task<GameObject> LoadPlayerPrefabAsync();
+        Task<GameObject> LoadPanelPrefabAsync();
+        Task<GameObject> LoadPanelRewardAdsbAsync();
     }
 }

@@ -11,8 +11,7 @@ namespace Project.Scripts.Enemies
     {
         private readonly WeaponFactory _weaponFactory;
         private readonly SceneData _sceneData;
-        private readonly List<EnemyModel> _enemies = new();
-        public List<EnemyModel> Enemies => _enemies;
+        public List<EnemyModel> Enemies { get; } = new();
 
         public EnemyFactory(WeaponFactory weaponFactory, SceneData sceneData)
         {
@@ -23,7 +22,7 @@ namespace Project.Scripts.Enemies
         public void CreateEnemies(EnemySpawnData[] enemySpawnData)
         {
             EnemyModel[] enemies = new EnemyModel[enemySpawnData.Length];
-            _enemies.Clear();
+            Enemies.Clear();
 
             for (int i = 0; i < enemySpawnData.Length; i++)
             {
@@ -41,7 +40,7 @@ namespace Project.Scripts.Enemies
 
                 if (data.Config is EnemyStoneConfig stoneConfig)
                 {
-                    enemy = new StoneEnemy(stoneConfig, _weaponFactory, enemyWeapon, enemyHealth);
+                    enemy = new StoneEnemy(stoneConfig, _sceneData, enemyWeapon, enemyHealth);
                 }
                 else
                 {
@@ -49,7 +48,7 @@ namespace Project.Scripts.Enemies
                 }
 
                 enemies[i] = enemy;
-                _enemies.Add(enemy);
+                Enemies.Add(enemy);
 
                 enemyObject.Initialize(enemy, enemyObject.WeaponTransform, enemyHealth);
             }

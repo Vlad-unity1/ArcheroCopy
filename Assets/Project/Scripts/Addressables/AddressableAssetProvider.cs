@@ -1,15 +1,32 @@
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 using System.Threading.Tasks;
-using UnityEngine.ResourceManagement.AsyncOperations;
+using Project.Scripts.Addressables;
 
-namespace Project.Scripts.Addressables
+public class AssetProvider : IAssetProvider
 {
-    public class AddressableAssetProvider : IAssetProvider
+    private const string PlayerPrefabAddress = "Assets/Project/Prefabs/Player.prefab";
+    private const string PanelPrefabAdress = "Assets/Project/Prefabs/GameOverPanel.prefab";
+    private const string PanelAdsPrefabAdress = "Assets/Project/Prefabs/PanelAds.prefab";
+
+    public async Task<GameObject> LoadPlayerPrefabAsync()
     {
-        public async Task<T> LoadAssetAsync<T>(string key) where T : UnityEngine.Object
-        {
-            AsyncOperationHandle<T> handle = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<T>(key);
-            await handle.Task;
-            return handle.Result;
-        }
+        var handle = Addressables.LoadAssetAsync<GameObject>(PlayerPrefabAddress);
+        await handle.Task;
+        return handle.Result;
+    }
+
+    public async Task<GameObject> LoadPanelPrefabAsync()
+    {
+        var handle = Addressables.LoadAssetAsync<GameObject>(PanelPrefabAdress);
+        await handle.Task;
+        return handle.Result;
+    }
+
+    public async Task<GameObject> LoadPanelRewardAdsbAsync()
+    {
+        var handle = Addressables.LoadAssetAsync<GameObject>(PanelAdsPrefabAdress);
+        await handle.Task;
+        return handle.Result;
     }
 }

@@ -5,7 +5,7 @@ using Zenject;
 
 namespace Project.Scripts.Weapons
 {
-    public class WeaponFactory : MonoBehaviour
+    public class WeaponFactory
     {
         private BowConfig _bowConfig;
         private BulletFactoryPlayer _bulletFactory;

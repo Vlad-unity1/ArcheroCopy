@@ -23,7 +23,7 @@ namespace Project.Scripts.Players
         private Health _health;
         private SceneData _sceneData;
 
-        public void Initialize(PlayerModel player, PlayerInputHandler inputHandler, Health health, SceneData sceneData, float Exp)
+        public void Initialize(PlayerModel player, PlayerInputHandler inputHandler, Health health, SceneData sceneData, int Exp)
         {
             _player = player;
             _inputHandler = inputHandler;
@@ -116,7 +116,7 @@ namespace Project.Scripts.Players
             _health.OnHealthChanged -= UpdateHealthBar;
         }
 
-        public void AddExperience(float amount)
+        public void AddExperience(int amount)
         {
             _player.CurrentExperience += amount;
 

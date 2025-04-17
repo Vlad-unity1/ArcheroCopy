@@ -1,4 +1,5 @@
-﻿using NextLevelLoader;
+﻿using System;
+using NextLevelLoader;
 using Project.Scripts.Enemies;
 using Project.Scripts.PlayerModels;
 using Project.Scripts.Players;
@@ -16,6 +17,7 @@ namespace Project.Scripts
     {
         private int _killsCount;
         private int _levelCount;
+        private bool _rewardAdsComplete = false;
         private List<EnemyModel> _enemies;
         private PlayerModel _player;
         private readonly EnemyFactory _enemyFactory;
@@ -28,9 +30,11 @@ namespace Project.Scripts
         private readonly SceneData _sceneData;
         private readonly IAnalyticsService _analyticsService;
         private readonly TextMeshProUGUI _levelText;
+        private readonly PlayerPrefsSave _playerPrefsSaver;
 
         public GameFlow(EnemyFactory enemyFactory, PlayerFactory playerFactory, PlayerSpawnPoint spawnPointPlayer, Joystick joystick,
-            NextLevel nextLevelController, EnemySpawnData[] enemySpawnDatas, Slider experienceSlider, SceneData sceneData, IAnalyticsService analyticsService, TextMeshProUGUI textMeshProUGUI)
+            NextLevel nextLevelController, EnemySpawnData[] enemySpawnDatas, Slider experienceSlider, SceneData sceneData, IAnalyticsService analyticsService, TextMeshProUGUI textMeshProUGUI, 
+            PlayerPrefsSave playerPrefsSaver)
         {
             _enemyFactory = enemyFactory;
             _playerFactory = playerFactory;
@@ -42,6 +46,7 @@ namespace Project.Scripts
             _sceneData = sceneData;
             _analyticsService = analyticsService;
             _levelText = textMeshProUGUI;
+            _playerPrefsSaver = playerPrefsSaver;
         }
 
         public void Initialize()
@@ -60,32 +65,63 @@ namespace Project.Scripts
 
             foreach (var enemy in _enemies)
             {
-                enemy.EnemyHealth.OnEntityDeath += () => RemoveEnemy(enemy);
+                enemy.EnemyHealth.OnEntityDeath += GetEnemyDeathHandler(enemy);
             }
 
-            float savedExperience = PlayerPrefs.GetFloat("EXP", 0);
-            _player.CurrentExperience = savedExperience;
-            _levelCount = PlayerPrefs.GetInt("LEVEL", 0);
-            _levelText.text = "Level: " + _levelCount;
+            PlayerPrefsLoad();
             UpdateExperienceSlider();
         }
 
+        private Action GetEnemyDeathHandler(EnemyModel enemy)
+        {
+            return () => RemoveEnemy(enemy);
+        }
 
+        private void PlayerPrefsLoad()
+        {
+            var savedData = _playerPrefsSaver.Load();
+            _player.CurrentExperience = savedData.Experience;
+            _levelCount = savedData.Level;
+            _levelText.text = "Level: " + _levelCount;
+        }
+        
         private void RemoveEnemy(EnemyModel enemy)
         {
-            enemy.EnemyHealth.OnEntityDeath -= () => RemoveEnemy(enemy);
+            enemy.EnemyHealth.OnEntityDeath -= GetEnemyDeathHandler(enemy);
             _enemies.Remove(enemy);
             _player.PlayerMovement.AddExperience(enemy.EXP);
             UpdateExperienceSlider();
-            _nextLevelController.SaveExperience(_player.CurrentExperience);
+            _playerPrefsSaver.Save(_player, _player.CurrentExperience);
             _killsCount++;
 
             if (_enemies.Count == 0)
             {
                 OnAllEnemiesDefeated();
-                _analyticsService.LogEvent("enemy_death", 
-                    ("kills_count", _killsCount));
+                _analyticsService.LogEnemyDeath(_killsCount);
             }
+        }
+
+        private async void ShowRewardedAds()
+        {
+            await _nextLevelController.EnablePanelAdsAsync();
+            _nextLevelController.RewardedAds.OnAdWatched += RevivePlayer;
+        }
+
+        private async void RevivePlayer()
+        {
+            _nextLevelController.RewardedAds.OnAdWatched -= RevivePlayer;
+
+            GameObject.Destroy(_nextLevelController.PanelAds);
+
+            _player = await _playerFactory.CreatePlayerAsync(_spawnPointPlayer, 100, _joystick);
+            _player.PlayerHealth.OnEntityDeath += RemovePlayer;
+
+            Time.timeScale = 1;
+        }
+
+        private async void OnAllPlayersDefeated()
+        {
+            await _nextLevelController.EnablePanelAsync();
         }
 
         private void OnAllEnemiesDefeated()
@@ -97,21 +133,22 @@ namespace Project.Scripts
         private void RemovePlayer()
         {
             _player.PlayerHealth.OnEntityDeath -= RemovePlayer;
-            PlayerPrefs.DeleteKey("EXP");
-            PlayerPrefs.DeleteKey("LEVEL");
-            OnAllPlayersDefeated();
-            LogDeathAndBulletsFired();
+            if (!_rewardAdsComplete)
+            {
+                ShowRewardedAds();
+                _rewardAdsComplete = true;
+            }
+            else
+            {
+                _playerPrefsSaver.Clear();
+                LogDeathAndBulletsFired();
+                OnAllPlayersDefeated();
+            }
         }
 
         private void LogDeathAndBulletsFired()
         {
-            _analyticsService.LogEvent("entity_death",
-                ("bullets_fired", _player.CurrentWeapon.BulletsFired));
-        }
-
-        private void OnAllPlayersDefeated()
-        {
-            _nextLevelController.EnablePanel();
+            _analyticsService.LogEntityDeath(_player.CurrentWeapon.BulletsFired);
         }
 
         private void UpdateExperienceSlider()
@@ -125,9 +162,8 @@ namespace Project.Scripts
         private void LevelCounting()
         {
             _levelCount++;
-            PlayerPrefs.SetInt("LEVEL", _levelCount);
-            PlayerPrefs.Save();
-            _analyticsService.LogEvent("level_passed", ("levels_number", _levelCount));
+            _playerPrefsSaver.Save(_player, _levelCount);
+            _analyticsService.LogLevelPassed(_levelCount);
             _levelText.text = "Level: " + _levelCount;
         }
 

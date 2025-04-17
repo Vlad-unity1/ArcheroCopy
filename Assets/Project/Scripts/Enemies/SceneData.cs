@@ -10,6 +10,6 @@ namespace Project.Scripts.Enemies
         public WeaponFactory _weaponFactory;
         public PlayerMovement PrefabPlayer;
 
-        public float MaxExperience = 10;
+        public int MaxExperience = 10;
     }
 }

@@ -10,7 +10,7 @@ namespace Project.Scripts.Enemy
     {
         private readonly MonoBehaviour _coroutineRunner;
 
-        public StoneEnemy(EnemyStoneConfig config, WeaponFactory coroutineRunner, Weapon<StoneCannonConfig> weapon, Health health)
+        public StoneEnemy(EnemyStoneConfig config, SceneData coroutineRunner, Weapon<StoneCannonConfig> weapon, Health health)
             : base(config, weapon, health, config.EXP)
         {
             _coroutineRunner = coroutineRunner;

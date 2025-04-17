@@ -1,25 +1,22 @@
-using System.Collections.Generic;
 using Firebase.Analytics;
 
 namespace Project.Scripts.Firebase
 {
     public class FirebaseAnalyticsService : IAnalyticsService
     {
-        public void LogEvent(string eventName, params (string key, object value)[] parameters)
+        public void LogEnemyDeath(int killsCount)
         {
-            List<Parameter> firebaseParameters = new();
+            FirebaseAnalytics.LogEvent("enemy_death", new Parameter("kills_count", killsCount));
+        }
 
-            foreach (var (key, value) in parameters)
-            {
-                if (value is string strValue)
-                    firebaseParameters.Add(new Parameter(key, strValue));
-                else if (value is int intValue)
-                    firebaseParameters.Add(new Parameter(key, intValue));
-                else if (value is float floatValue)
-                    firebaseParameters.Add(new Parameter(key, floatValue));
-            }
+        public void LogEntityDeath(int bulletsFired)
+        {
+            FirebaseAnalytics.LogEvent("entity_death", new Parameter("bullets_fired", bulletsFired));
+        }
 
-            FirebaseAnalytics.LogEvent(eventName, firebaseParameters.ToArray());
+        public void LogLevelPassed(int levelCount)
+        {
+            FirebaseAnalytics.LogEvent("level_passed", new Parameter("levels_number", levelCount));
         }
     }
 }

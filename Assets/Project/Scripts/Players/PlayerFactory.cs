@@ -14,26 +14,28 @@ namespace Project.Scripts.Players
         private readonly WeaponFactory _weaponFactory;
         private readonly SceneData _sceneData;
         private readonly IAssetProvider _assetProvider;
+        private readonly PlayerPrefsSave _playerPrefsSave;
 
-        public PlayerFactory(WeaponFactory weaponFactory, SceneData sceneData, IAssetProvider assetProvider)
+        public PlayerFactory(WeaponFactory weaponFactory, SceneData sceneData, IAssetProvider assetProvider, PlayerPrefsSave playerPrefsSave)
         {
             _weaponFactory = weaponFactory;
             _sceneData = sceneData;
             _assetProvider = assetProvider;
+            _playerPrefsSave = playerPrefsSave;
         }
 
         public async Task<PlayerModel> CreatePlayerAsync(PlayerSpawnPoint spawnPosition, int initialHealth, Joystick joystick)
         {
-            GameObject playerPrefab = await _assetProvider.LoadAssetAsync<GameObject>("Assets/Project/Prefabs/Player.prefab");
+            GameObject playerPrefab = await _assetProvider.LoadPlayerPrefabAsync();
             PlayerMovement playerMovement = Object.Instantiate(playerPrefab, spawnPosition.transform.position, Quaternion.identity).GetComponent<PlayerMovement>();
 
             var playerInput = new PlayerInputHandler(joystick);
             var weapon = _weaponFactory.CreateWeapon(playerMovement.weaponTransformPrefab);
             var health = new Health(initialHealth, playerMovement.gameObject);
-            float savedExp = PlayerPrefs.GetFloat("EXP", 0);
-            var player = new PlayerModel(health, 10, weapon, playerMovement, playerInput.Joystick, savedExp);
+            var playerSaveData = _playerPrefsSave.Load();
+            var player = new PlayerModel(health, 10, weapon, playerMovement, playerInput.Joystick, playerSaveData.Experience);
 
-            playerMovement.Initialize(player, playerInput, health, _sceneData, savedExp);
+            playerMovement.Initialize(player, playerInput, health, _sceneData, playerSaveData.Experience);
             player.SetWeapon(weapon);
 
             return player;

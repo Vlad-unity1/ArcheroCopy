@@ -8,7 +8,7 @@ namespace Project.Scripts.Enemies
     public class EnemyConfig : ScriptableObject
     {
         public int MaxHealth;
-        public float EXP;
+        public int EXP;
         public EnemyView PrefabEnemy;
         public Weapon<StoneCannonConfig> StartingWeaponConfig;
 
