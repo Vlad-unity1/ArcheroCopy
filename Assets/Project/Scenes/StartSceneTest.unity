@@ -1323,83 +1323,6 @@ Transform:
   - {fileID: 1627011675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1093320579
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1093320581}
-  - component: {fileID: 1093320580}
-  - component: {fileID: 1093320582}
-  - component: {fileID: 1093320583}
-  m_Layer: 0
-  m_Name: Add
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1093320580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1093320579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13cae1ce33bb7ef4099a7d9c51d0e658, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _androidGameId: 5834596
-  _iOSGameId: 5834597
-  _testMode: 1
---- !u!4 &1093320581
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1093320579}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1093320582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1093320579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cfee4111101b924085f52d185e03520, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _androidAdUnitId: Interstitial_Android
-  _iOsAdUnitId: Interstitial_iOS
---- !u!114 &1093320583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1093320579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ecc8f1501a73184bb31e2bbf6e07c39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _androidAdUnitId: Rewarded_Android
-  _iOSAdUnitId: Rewarded_iOS
 --- !u!1 &1110577490
 GameObject:
   m_ObjectHideFlags: 0
@@ -3238,12 +3161,9 @@ MonoBehaviour:
   _slider: {fileID: 1011952333}
   _levelText: {fileID: 1481866098}
   _levelCollider: {fileID: 1627011671}
-  _panelGameOver: {fileID: 3292134762110127048, guid: 81e2034ecfbdf454f9d2328581f6736c, type: 3}
+  _panelGameOver: {fileID: 8862474714923275471, guid: 81e2034ecfbdf454f9d2328581f6736c, type: 3}
   _panelCanvas: {fileID: 406937205}
   _sceneLoader: {fileID: 8715786038875783157}
-  _ads: {fileID: 1093320580}
-  _adsEx: {fileID: 1093320582}
-  _rewardedAds: {fileID: 1093320583}
 --- !u!114 &8715786038875783156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3288,4 +3208,3 @@ SceneRoots:
   - {fileID: 137320650}
   - {fileID: 705507995}
   - {fileID: 963194228}
-  - {fileID: 1093320581}

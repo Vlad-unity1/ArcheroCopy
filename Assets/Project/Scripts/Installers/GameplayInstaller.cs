@@ -24,12 +24,9 @@ namespace Project.Scripts.Installers
         [SerializeField] private Slider _slider;
         [SerializeField] private TextMeshProUGUI _levelText;
         [SerializeField] private Collider _levelCollider;
-        [SerializeField] private GameObject _panelGameOver;
+        [SerializeField] private PanelView _panelGameOver;
         [SerializeField] private Canvas _panelCanvas;
         [SerializeField] private SceneLoader _sceneLoader;
-        [SerializeField] private AdsInitializer _ads;
-        [SerializeField] private InterstitialAdExample _adsEx;
-        [SerializeField] private RewardedAds _rewardedAds;
 
         public override void InstallBindings()
         {
@@ -66,16 +63,20 @@ namespace Project.Scripts.Installers
 
         private void BindUI()
         {
+            Container.Bind<RewardedAds>().AsSingle();
+            Container.Bind<AdsInitializer>().AsSingle();
+            Container.Bind<InterstitialAdExample>().AsSingle();
+            Container.Bind<PanelPresenter>().AsSingle();
             Container.BindInstance(_slider).AsSingle();
             Container.BindInstance(_levelText).AsSingle();
-            Container.BindInstance(_panelGameOver);
             Container.BindInstance(_panelCanvas);
             Container.BindInstance(_levelCollider);
             Container.BindInstance(_sceneLoader);
-            Container.BindInstance(_ads);
-            Container.BindInstance(_adsEx);
-            Container.BindInstance(_rewardedAds);
-            Container.Bind<NextLevel>().AsSingle().WithArguments(_levelCollider, _panelGameOver, _panelCanvas, _sceneLoader, _rewardedAds, _adsEx);
+            Container.Bind<PanelView>()
+               .FromComponentInNewPrefab(_panelGameOver)
+               .AsSingle()
+               .NonLazy();
+            Container.Bind<PanelModel>().AsSingle().WithArguments(_levelCollider, _panelGameOver, _panelCanvas, _sceneLoader);
         }
 
         private void BindServices()

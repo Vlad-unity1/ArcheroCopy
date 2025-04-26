@@ -7,7 +7,7 @@ namespace Project.Scripts.Addressables
     public interface IAssetProvider
     {
         Task<GameObject> LoadPlayerPrefabAsync();
-        Task<GameObject> LoadPanelPrefabAsync();
+        Task<PanelView> LoadPanelPrefabAsync();
         Task<Button> LoadRewardAdsbAsync();
     }
 }

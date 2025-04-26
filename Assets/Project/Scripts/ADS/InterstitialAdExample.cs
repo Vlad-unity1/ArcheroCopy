@@ -3,13 +3,13 @@ using UnityEngine.Advertisements;
 
 namespace Project.Scripts
 {
-    public class InterstitialAdExample : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
+    public class InterstitialAdExample : IUnityAdsLoadListener, IUnityAdsShowListener
     {
-        [SerializeField] string _androidAdUnitId = "Interstitial_Android"; // ID рекламного блока для Android
-        [SerializeField] string _iOsAdUnitId = "Interstitial_iOS";         // ID рекламного блока для iOS
-        string _adUnitId;
+        private readonly string _androidAdUnitId = "Interstitial_Android"; // ID рекламного блока для Android
+        private readonly string _iOsAdUnitId = "Interstitial_iOS";         // ID рекламного блока для iOS
+        private string _adUnitId;
 
-        void Awake()
+        public void Initialize()
         {
             // Получаем ID рекламного блока в зависимости от платформы:
             _adUnitId = (Application.platform == RuntimePlatform.IPhonePlayer)

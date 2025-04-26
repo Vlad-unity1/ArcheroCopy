@@ -5,26 +5,13 @@ using UnityEngine.UI;
 
 namespace Project.Scripts
 {
-    public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
+    public class RewardedAds : IUnityAdsLoadListener, IUnityAdsShowListener
     {
         public event Action OnAdWatched;
-        private readonly bool _isAdLoaded = false;
-        private Button _showAdButton;
-        [SerializeField] string _androidAdUnitId = "Rewarded_Android";
-        [SerializeField] string _iOSAdUnitId = "Rewarded_iOS";
-        string _adUnitId = null; // This will remain null for unsupported platforms
+        private readonly string _androidAdUnitId = "Rewarded_Android";
+        private readonly string _iOSAdUnitId = "Rewarded_iOS";
+        private string _adUnitId = null; // This will remain null for unsupported platforms
 
-        public void SetAdButton(Button button)
-        {
-            _showAdButton = button;
-            _showAdButton.interactable = false;
-
-            if (_isAdLoaded)
-            {
-                _showAdButton.onClick.AddListener(ShowAd);
-                _showAdButton.interactable = true;
-            }
-        }
 
         // Call this public method when you want to get an ad ready to show.
         public void LoadAd()
@@ -44,9 +31,9 @@ namespace Project.Scripts
             if (adUnitId.Equals(_adUnitId))
             {
                 // Configure the button to call the ShowAd() method when clicked:
-                _showAdButton.onClick.AddListener(ShowAd);
+                
                 // Enable the button for users to click:
-                _showAdButton.interactable = true;
+                
             }
         }
 
@@ -54,7 +41,6 @@ namespace Project.Scripts
         public void ShowAd()
         {
             // Disable the button:
-            _showAdButton.interactable = false;
             // Then show the ad:
             Advertisement.Show(_adUnitId, this);
         }
@@ -90,7 +76,7 @@ namespace Project.Scripts
         void OnDestroy()
         {
             // Clean up the button listeners:
-            _showAdButton.onClick.RemoveAllListeners();
+            
         }
     }
 }

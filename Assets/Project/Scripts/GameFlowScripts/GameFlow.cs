@@ -1,58 +1,86 @@
-﻿using System;
-using NextLevelLoader;
+﻿using NextLevelLoader;
 using Project.Scripts.Enemies;
+using Project.Scripts.Firebase;
+using Project.Scripts.Installers;
 using Project.Scripts.PlayerModels;
 using Project.Scripts.Players;
+using System;
 using System.Collections.Generic;
-using Project.Scripts.Firebase;
+using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using TMPro;
-using System.Threading.Tasks;
 
 namespace Project.Scripts
 {
-    public class GameFlow : IInitializable, ITickable
+    public class GameFlow : IInitializable, ITickable, IDisposable
     {
         private int _killsCount;
         private int _levelCount;
         private bool _rewardAdsComplete = false;
+
         private List<EnemyModel> _enemies;
         private PlayerModel _player;
+
         private readonly EnemyFactory _enemyFactory;
         private readonly PlayerFactory _playerFactory;
         private readonly PlayerSpawnPoint _spawnPointPlayer;
         private readonly Joystick _joystick;
-        private readonly NextLevel _nextLevelController;
+        private readonly PanelModel _panelModel;
+        private readonly PanelPresenter _panelPresenter;
         private readonly EnemySpawnData[] _enemySpawnData;
         private readonly Slider _experienceSlider;
         private readonly SceneData _sceneData;
         private readonly IAnalyticsService _analyticsService;
         private readonly TextMeshProUGUI _levelText;
         private readonly PlayerPrefsSave _playerPrefsSaver;
+        private readonly AdsInitializer _adsInitializer;
+        private readonly InterstitialAdExample _interstitialAdExample;
+        private readonly RewardedAds _rewardedAds;
 
-        public GameFlow(EnemyFactory enemyFactory, PlayerFactory playerFactory, PlayerSpawnPoint spawnPointPlayer, Joystick joystick,
-            NextLevel nextLevelController, EnemySpawnData[] enemySpawnDatas, Slider experienceSlider, SceneData sceneData, IAnalyticsService analyticsService, TextMeshProUGUI textMeshProUGUI, 
-            PlayerPrefsSave playerPrefsSaver)
+        public GameFlow(
+            EnemyFactory enemyFactory,
+            PlayerFactory playerFactory,
+            PlayerSpawnPoint spawnPointPlayer,
+            Joystick joystick,
+            PanelModel panelModel,
+            PanelPresenter panelPresenter,
+            EnemySpawnData[] enemySpawnData,
+            Slider experienceSlider,
+            SceneData sceneData,
+            IAnalyticsService analyticsService,
+            TextMeshProUGUI textMeshProUGUI,
+            PlayerPrefsSave playerPrefsSaver,
+            AdsInitializer adsInitializer,
+            InterstitialAdExample interstitialAdExample, RewardedAds rewardedAds
+            )
         {
             _enemyFactory = enemyFactory;
             _playerFactory = playerFactory;
             _spawnPointPlayer = spawnPointPlayer;
             _joystick = joystick;
-            _nextLevelController = nextLevelController;
-            _enemySpawnData = enemySpawnDatas;
+            _panelModel = panelModel;
+            _panelPresenter = panelPresenter;
+            _enemySpawnData = enemySpawnData;
             _experienceSlider = experienceSlider;
             _sceneData = sceneData;
             _analyticsService = analyticsService;
             _levelText = textMeshProUGUI;
             _playerPrefsSaver = playerPrefsSaver;
+            _adsInitializer = adsInitializer;
+            _interstitialAdExample = interstitialAdExample;
+            _rewardedAds = rewardedAds;
         }
 
         public void Initialize()
         {
-            _nextLevelController.DisablePanels();
+            _panelModel.DisablePanels();
             _ = InitializeAsync();
+            _adsInitializer.InitializeAds();
+            _interstitialAdExample.Initialize();
+            _panelPresenter.OnRewardedAdClicked += RevivePlayer;
+            _rewardedAds.OnAdWatched += RevivePlayer;
         }
 
         private async Task InitializeAsync()
@@ -68,7 +96,7 @@ namespace Project.Scripts
                 enemy.EnemyHealth.OnEntityDeath += GetEnemyDeathHandler(enemy);
             }
 
-            PlayerPrefsLoad();
+            LoadPlayerPrefs();
             UpdateExperienceSlider();
         }
 
@@ -77,14 +105,14 @@ namespace Project.Scripts
             return () => RemoveEnemy(enemy);
         }
 
-        private void PlayerPrefsLoad()
+        private void LoadPlayerPrefs()
         {
             var savedData = _playerPrefsSaver.Load();
             _player.CurrentExperience = savedData.Experience;
             _levelCount = savedData.Level;
             _levelText.text = "Level: " + _levelCount;
         }
-        
+
         private void RemoveEnemy(EnemyModel enemy)
         {
             enemy.EnemyHealth.OnEntityDeath -= GetEnemyDeathHandler(enemy);
@@ -101,28 +129,10 @@ namespace Project.Scripts
             }
         }
 
-        private void ShowRewardedAds()
-        {
-            _nextLevelController.RewardedAds.OnAdWatched += RevivePlayer;
-        }
-
-        private async void RevivePlayer()
-        {
-            _nextLevelController.RewardedAds.OnAdWatched -= RevivePlayer;
-
-            GameObject.Destroy(_nextLevelController.PanelAds.gameObject);
-            _nextLevelController.DisablePanels();
-            _player = await _playerFactory.CreatePlayerAsync(_spawnPointPlayer, 100, _joystick);
-            PlayerPrefsLoad();
-            _player.PlayerHealth.OnEntityDeath += RemovePlayer;
-
-            Time.timeScale = 1;
-        }
-
         private void OnAllEnemiesDefeated()
         {
-            _nextLevelController.EnableCollider();
-            LevelCounting();
+            _panelModel.EnableCollider();
+            LevelUp();
         }
 
         private void RemovePlayer()
@@ -131,32 +141,38 @@ namespace Project.Scripts
 
             if (!_rewardAdsComplete)
             {
-                _ = _nextLevelController.EnablePanelAsync(true);
-                ShowRewardedAds();
-                _rewardAdsComplete = true;
+                _ = _panelModel.CreatePanelAsync();
             }
             else
             {
-                _ = _nextLevelController.EnablePanelAsync(false);
+                _ = _panelModel.CreatePanelAsync();
                 _playerPrefsSaver.Clear();
-                LogDeathAndBulletsFired();
+                _player.CurrentExperience = 0;  
+                UpdateExperienceSlider();
+                LogDeathAnalytics();
             }
         }
 
-        private void LogDeathAndBulletsFired()
+        private async void RevivePlayer()
         {
-            _analyticsService.LogEntityDeath(_player.CurrentWeapon.BulletsFired);
+            _panelPresenter.OnRewardedAdClicked -= RevivePlayer;
+            _rewardAdsComplete = true;
+
+            _panelModel.DisablePanels();
+            _player = await _playerFactory.CreatePlayerAsync(_spawnPointPlayer, 100, _joystick);
+            _player.PlayerHealth.OnEntityDeath += RemovePlayer;
+
+            Time.timeScale = 1f;
         }
 
         private void UpdateExperienceSlider()
         {
-            float currentExperience = _player.CurrentExperience;
-            float maxExperience = _sceneData.MaxExperience;
-
-            _experienceSlider.value = Mathf.Clamp(currentExperience / maxExperience, 0f, 1f);
+            float current = _player.CurrentExperience;
+            float max = _sceneData.MaxExperience;
+            _experienceSlider.value = Mathf.Clamp(current / max, 0f, 1f);
         }
-        
-        private void LevelCounting()
+
+        private void LevelUp()
         {
             _levelCount++;
             _playerPrefsSaver.Save(_player, _levelCount);
@@ -164,9 +180,20 @@ namespace Project.Scripts
             _levelText.text = "Level: " + _levelCount;
         }
 
+        private void LogDeathAnalytics()
+        {
+            _analyticsService.LogEntityDeath(_player.CurrentWeapon.BulletsFired);
+        }
+
         public void Tick()
         {
             _player?.Move();
+        }
+
+        public void Dispose()
+        {
+            _panelPresenter.OnRewardedAdClicked -= RevivePlayer;
+            _rewardedAds.OnAdWatched -= RevivePlayer;
         }
     }
 }
