@@ -1,41 +1,43 @@
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 using System.Threading.Tasks;
-using Project.Scripts.Addressables;
+using Project.Scripts.PanelSettings;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class AssetProvider : IAssetProvider
+namespace Project.Scripts.Addressables
 {
-    private const string PlayerPrefabAddress = "Assets/Project/Prefabs/Player.prefab";
-    private const string PanelPrefabAddress = "Assets/Project/Prefabs/GameOverPanel.prefab";
-    private const string ButtonADSAddress = "Assets/Project/Prefabs/ButtonADS.prefab";
-
-    public async Task<GameObject> LoadPlayerPrefabAsync()
+    public class AssetProvider : IAssetProvider
     {
-        var handle = Addressables.LoadAssetAsync<GameObject>(PlayerPrefabAddress);
-        await handle.Task;
-        return handle.Result;
-    }
+        private const string PlayerPrefabAddress = "Assets/Project/Prefabs/Player.prefab";
+        private const string PanelPrefabAddress = "Assets/Project/Prefabs/GameOverPanel.prefab";
+        private const string ButtonADSAddress = "Assets/Project/Prefabs/ButtonADS.prefab";
 
-    public async Task<PanelView> LoadPanelPrefabAsync()
-    {
-        var handle = Addressables.InstantiateAsync(PanelPrefabAddress);
-        await handle.Task;
+        public async Task<GameObject> LoadPlayerPrefabAsync()
+        {
+            var handle = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(PlayerPrefabAddress);
+            await handle.Task;
+            return handle.Result;
+        }
 
-        var panelGO = handle.Result;
-        var panelView = panelGO.GetComponent<PanelView>();
+        public async Task<PanelView> LoadPanelPrefabAsync()
+        {
+            var handle = UnityEngine.AddressableAssets.Addressables.InstantiateAsync(PanelPrefabAddress);
+            await handle.Task;
 
-        return panelView;
-    }
+            var panelGO = handle.Result;
+            var panelView = panelGO.GetComponent<PanelView>();
 
-    public async Task<Button> LoadRewardAdsbAsync()
-    {
-        var handle = Addressables.LoadAssetAsync<GameObject>(ButtonADSAddress);
-        await handle.Task;
+            return panelView;
+        }
 
-        var prefab = handle.Result;
-        var button = prefab.GetComponent<Button>();
+        public async Task<Button> LoadRewardAdsbAsync()
+        {
+            var handle = UnityEngine.AddressableAssets.Addressables.LoadAssetAsync<GameObject>(ButtonADSAddress);
+            await handle.Task;
 
-        return button;
+            var prefab = handle.Result;
+            var button = prefab.GetComponent<Button>();
+
+            return button;
+        }
     }
 }

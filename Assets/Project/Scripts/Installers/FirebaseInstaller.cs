@@ -1,9 +1,10 @@
 ﻿using Firebase;
 using Firebase.Extensions;
+using Project.Scripts.Firebase;
 using UnityEngine.SceneManagement;
 using Zenject;
 
-namespace Project.Scripts.Firebase
+namespace Project.Scripts.Installers
 {
     public class FirebaseInstaller : MonoInstaller
     {

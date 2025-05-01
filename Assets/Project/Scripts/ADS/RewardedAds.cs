@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-namespace Project.Scripts
+namespace Project.Scripts.ADS
 {
     public class RewardedAds : IUnityAdsLoadListener, IUnityAdsShowListener
     {

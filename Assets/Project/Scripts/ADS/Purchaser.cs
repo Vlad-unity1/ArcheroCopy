@@ -1,21 +1,24 @@
 using UnityEngine;
 using UnityEngine.Purchasing;
 
-public class Purchaser : MonoBehaviour
+namespace Project.Scripts.ADS
 {
-    public void OnPurchaseCompleted(Product product)
+    public class Purchaser : MonoBehaviour
     {
-        switch (product.definition.id)
+        public void OnPurchaseCompleted(Product product)
         {
-            case "RemoveAdd":
-                RemoveAds();
-                break;
+            switch (product.definition.id)
+            {
+                case "RemoveAdd":
+                    RemoveAds();
+                    break;
+            }
         }
-    }
 
-    private void RemoveAds()
-    {
-        PlayerPrefs.SetInt("removeads", 1);
-        Debug.Log("Purchase: removeads");
+        private void RemoveAds()
+        {
+            PlayerPrefs.SetInt("removeads", 1);
+            Debug.Log("Purchase: removeads");
+        }
     }
 }

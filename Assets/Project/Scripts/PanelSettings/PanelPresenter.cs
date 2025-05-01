@@ -1,8 +1,7 @@
-using NextLevelLoader;
+using Project.Scripts.PanelSettings;
 using System;
-using UnityEngine;
 
-public class PanelPresenter
+public abstract class PanelPresenter
 {
     private readonly PanelView _view;
     private readonly PanelModel _nextLevel;
@@ -24,7 +23,7 @@ public class PanelPresenter
         _nextLevel.DisablePanels();
     }
 
-    public void OnRewardedAdClickedInternal()
+    private void OnRewardedAdClickedInternal()
     {
         _nextLevel.ShowRewardedAd();
         _nextLevel.DisablePanels();

@@ -1,9 +1,10 @@
-﻿using Project.Scripts;
-using Project.Scripts.Addressables;
+﻿using Project.Scripts.Addressables;
+using Project.Scripts.ADS;
+using Project.Scripts.GameFlowScripts;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace NextLevelLoader
+namespace Project.Scripts.PanelSettings
 {
     public class PanelModel
     {

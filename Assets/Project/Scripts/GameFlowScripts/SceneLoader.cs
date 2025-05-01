@@ -2,24 +2,27 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneLoader : MonoBehaviour
+namespace Project.Scripts.GameFlowScripts
 {
-    [SerializeField] private Button _startGameButton;
-
-    private void OnTriggerEnter(Collider other)
+    public class SceneLoader : MonoBehaviour
     {
-        ReloadScene();
-    }
+        [SerializeField] private Button _startGameButton;
 
-    public void ReloadScene()
-    {
-        string currentSceneName = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(currentSceneName);
-        Time.timeScale = 1.0f;
-    }
+        private void OnTriggerEnter(Collider other)
+        {
+            ReloadScene();
+        }
 
-    public void StartGame()
-    {
-        SceneManager.LoadScene("StartSceneTest");
+        public void ReloadScene()
+        {
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(currentSceneName);
+            Time.timeScale = 1.0f;
+        }
+
+        public void StartGame()
+        {
+            SceneManager.LoadScene("StartSceneTest");
+        }
     }
 }

@@ -4,31 +4,34 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
 
-public class AuthManager : MonoBehaviour
+namespace Project.Scripts
 {
-    [SerializeField] private TextMeshProUGUI _logTxt;
-
-    public async void SignIn()
+    public class AuthManager : MonoBehaviour
     {
-        await SignInAnonymous();
-    }
+        [SerializeField] private TextMeshProUGUI _logTxt;
 
-    async Task SignInAnonymous()
-    {
-        try
+        public async void SignIn()
         {
-            await UnityServices.InitializeAsync();
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-            print("Sign in Success");
-            print("Player Id:" + AuthenticationService.Instance.PlayerId);
-            _logTxt.text = "Player id:" + AuthenticationService.Instance.PlayerId;
-        }
-        catch (AuthenticationException ex)
-        {
-            print("Sign in failed!!");
-            Debug.LogException(ex);
+            await SignInAnonymous();
         }
 
+        async Task SignInAnonymous()
+        {
+            try
+            {
+                await UnityServices.InitializeAsync();
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+                print("Sign in Success");
+                print("Player Id:" + AuthenticationService.Instance.PlayerId);
+                _logTxt.text = "Player id:" + AuthenticationService.Instance.PlayerId;
+            }
+            catch (AuthenticationException ex)
+            {
+                print("Sign in failed!!");
+                Debug.LogException(ex);
+            }
+
+        }
     }
 }

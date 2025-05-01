@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Project.Scripts.PanelSettings;
 using UnityEngine;
 using UnityEngine.UI;
 

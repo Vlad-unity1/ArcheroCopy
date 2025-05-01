@@ -15,7 +15,7 @@ namespace Project.Scripts.WeaponModel
 
         public abstract void InstantAttack();
 
-        public void IncreaseBulletsFired()
+        protected void IncreaseBulletsFired()
         {
             BulletsFired++;
         }

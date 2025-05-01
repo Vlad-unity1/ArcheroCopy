@@ -11,9 +11,6 @@ namespace Project.Scripts.PlayerModels
     {
         private const int ATTACK_DELAY = 250;
 
-        public event Action OnAttackStart;
-        public event Action OnAttackStop;
-
         public int CurrentExperience { get; set; }
         public int Speed = 5; // test 
         private bool isAttacking;
@@ -49,15 +46,12 @@ namespace Project.Scripts.PlayerModels
             if (isAttacking) return;
 
             isAttacking = true;
-            OnAttackStart?.Invoke();
 
             while (isAttacking)
             {
                 CurrentWeapon.InstantAttack();
                 
                 await Task.Delay(ATTACK_DELAY);
-
-                OnAttackStop?.Invoke();
             }
         }
 

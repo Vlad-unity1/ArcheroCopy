@@ -1,18 +1,19 @@
-﻿using NextLevelLoader;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Project.Scripts.ADS;
 using Project.Scripts.Enemies;
 using Project.Scripts.Firebase;
 using Project.Scripts.Installers;
+using Project.Scripts.PanelSettings;
 using Project.Scripts.PlayerModels;
 using Project.Scripts.Players;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace Project.Scripts
+namespace Project.Scripts.GameFlowScripts
 {
     public class GameFlow : IInitializable, ITickable, IDisposable
     {
