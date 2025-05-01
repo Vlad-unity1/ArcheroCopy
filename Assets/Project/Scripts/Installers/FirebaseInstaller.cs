@@ -7,7 +7,7 @@ namespace Project.Scripts.Firebase
 {
     public class FirebaseInstaller : MonoInstaller
     {
-        private readonly string _gameSceneName = "StartSceneTest";
+        private readonly string _gameSceneName = "MenuScene";
 
         public override void InstallBindings()
         {
