@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Advertisements;
-using UnityEngine.UI;
 
 namespace Project.Scripts
 {
@@ -17,6 +16,13 @@ namespace Project.Scripts
         public void LoadAd()
         {
             // IMPORTANT! Only load content AFTER initialization (in this example, initialization is handled in a different script).
+            if (PlayerPrefs.GetInt("removeads", 0) == 1)
+            {
+                Debug.Log("Ads are disabled, not loading ad.");
+                OnAdWatched?.Invoke();
+                return; 
+            }
+
             _adUnitId = _iOSAdUnitId;
             _adUnitId = _androidAdUnitId;
             Debug.Log("Loading Ad: " + _adUnitId);
@@ -31,17 +37,21 @@ namespace Project.Scripts
             if (adUnitId.Equals(_adUnitId))
             {
                 // Configure the button to call the ShowAd() method when clicked:
-                
+
                 // Enable the button for users to click:
-                
+
             }
         }
 
         // Implement a method to execute when the user clicks the button:
         public void ShowAd()
         {
-            // Disable the button:
-            // Then show the ad:
+            if (PlayerPrefs.GetInt("removeads", 0) == 1)
+            {
+                Debug.Log("Ads are disabled, not showing ad.");
+                return;
+            }
+
             Advertisement.Show(_adUnitId, this);
         }
 
@@ -76,7 +86,7 @@ namespace Project.Scripts
         void OnDestroy()
         {
             // Clean up the button listeners:
-            
+
         }
     }
 }

@@ -15,10 +15,20 @@ namespace Project.Scripts.Enemy
         {
             _coroutineRunner = coroutineRunner;
 
-            StartAutoAttack();
+            StartAttack();
         }
 
-        private void StartAutoAttack()
+        public void StopAutoAttack()
+        {
+            _coroutineRunner.StopAllCoroutines();
+        }
+
+        public override void StopAttack()
+        {
+            _coroutineRunner.StopAllCoroutines();
+        }
+
+        public override void StartAttack()
         {
             _coroutineRunner.StartCoroutine(AutoAttack());
         }

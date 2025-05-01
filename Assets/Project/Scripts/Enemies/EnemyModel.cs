@@ -32,5 +32,9 @@ namespace Project.Scripts.Enemies
                 yield return new WaitForSeconds(CurrentWeapon.Config.FireRate);
             }
         }
+
+        public virtual void StopAttack() { }
+
+        public virtual void StartAttack() { }
     }
 }

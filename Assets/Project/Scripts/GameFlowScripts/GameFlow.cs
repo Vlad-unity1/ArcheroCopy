@@ -38,6 +38,7 @@ namespace Project.Scripts
         private readonly AdsInitializer _adsInitializer;
         private readonly InterstitialAdExample _interstitialAdExample;
         private readonly RewardedAds _rewardedAds;
+        private readonly TimeService _timeService;
 
         public GameFlow(
             EnemyFactory enemyFactory,
@@ -53,7 +54,7 @@ namespace Project.Scripts
             TextMeshProUGUI textMeshProUGUI,
             PlayerPrefsSave playerPrefsSaver,
             AdsInitializer adsInitializer,
-            InterstitialAdExample interstitialAdExample, RewardedAds rewardedAds
+            InterstitialAdExample interstitialAdExample, RewardedAds rewardedAds, TimeService timeService
             )
         {
             _enemyFactory = enemyFactory;
@@ -71,6 +72,7 @@ namespace Project.Scripts
             _adsInitializer = adsInitializer;
             _interstitialAdExample = interstitialAdExample;
             _rewardedAds = rewardedAds;
+            _timeService = timeService;
         }
 
         public void Initialize()
@@ -81,7 +83,8 @@ namespace Project.Scripts
             _interstitialAdExample.Initialize();
             _panelPresenter.OnRewardedAdClicked += RevivePlayer;
             _rewardedAds.OnAdWatched += RevivePlayer;
-        }
+            _rewardAdsComplete = false;
+    }
 
         private async Task InitializeAsync()
         {
@@ -91,11 +94,7 @@ namespace Project.Scripts
 
             _player.PlayerHealth.OnEntityDeath += RemovePlayer;
 
-            foreach (var enemy in _enemies)
-            {
-                enemy.EnemyHealth.OnEntityDeath += GetEnemyDeathHandler(enemy);
-            }
-
+            SetupEnemies();
             LoadPlayerPrefs();
             UpdateExperienceSlider();
         }
@@ -112,6 +111,7 @@ namespace Project.Scripts
             _levelCount = savedData.Level;
             _levelText.text = "Level: " + _levelCount;
         }
+
 
         private void RemoveEnemy(EnemyModel enemy)
         {
@@ -138,6 +138,7 @@ namespace Project.Scripts
         private void RemovePlayer()
         {
             _player.PlayerHealth.OnEntityDeath -= RemovePlayer;
+            _timeService.Pause();
 
             if (!_rewardAdsComplete)
             {
@@ -147,7 +148,7 @@ namespace Project.Scripts
             {
                 _ = _panelModel.CreatePanelAsync();
                 _playerPrefsSaver.Clear();
-                _player.CurrentExperience = 0;  
+                LoadPlayerPrefs();
                 UpdateExperienceSlider();
                 LogDeathAnalytics();
             }
@@ -161,8 +162,8 @@ namespace Project.Scripts
             _panelModel.DisablePanels();
             _player = await _playerFactory.CreatePlayerAsync(_spawnPointPlayer, 100, _joystick);
             _player.PlayerHealth.OnEntityDeath += RemovePlayer;
-
-            Time.timeScale = 1f;
+            _timeService.SetPlayerModel(_player);
+            _timeService.Continue();
         }
 
         private void UpdateExperienceSlider()
@@ -183,6 +184,15 @@ namespace Project.Scripts
         private void LogDeathAnalytics()
         {
             _analyticsService.LogEntityDeath(_player.CurrentWeapon.BulletsFired);
+        }
+
+        private void SetupEnemies()
+        {
+            foreach (var enemy in _enemies)
+            {
+                enemy.EnemyHealth.OnEntityDeath += GetEnemyDeathHandler(enemy);
+                _timeService.SetPEnemyModel(enemy);
+            }
         }
 
         public void Tick()

@@ -34,6 +34,7 @@ namespace Project.Scripts.Players
         public void Clear()
         {
             PlayerPrefs.DeleteKey(SaveKey);
+            PlayerPrefs.Save();
         }
     }
 }

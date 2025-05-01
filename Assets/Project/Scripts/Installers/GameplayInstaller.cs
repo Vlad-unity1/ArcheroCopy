@@ -85,6 +85,7 @@ namespace Project.Scripts.Installers
             Container.Bind<IAnalyticsService>().To<FirebaseAnalyticsService>().AsSingle();
             Container.Bind<PlayerDataSave>().AsSingle();
             Container.Bind<PlayerPrefsSave>().AsSingle();
+            Container.Bind<TimeService>().AsSingle();
         }
 
         private void BindGameLogic()

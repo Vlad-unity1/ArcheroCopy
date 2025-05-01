@@ -47,7 +47,6 @@ namespace NextLevelLoader
             _currentPanelView.RewardedAdsClicked += ShowRewardedAd;
 
             _currentPanelView.gameObject.SetActive(true);
-            Time.timeScale = 0;
         }
 
         public void EnableCollider()
